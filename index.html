@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAVIRANJAN KUMAR UNSTOPPABLE</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: yellow;
+            font-size: 2.5em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: red;
+            color: yellow;
+        }
+        .missed {
+            background-color: red;
+            color: white;
+        }
+        .followed {
+            background-color: green;
+            color: white;
+        }
+        .reset-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .reset-btn:hover {
+            background-color: darkred;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>RAVIRANJAN KUMAR UNSTOPPABLE</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>German Lecture</th>
+                <th>30 Wortschatz</th>
+                <th>Task 3</th>
+                <th>Task 4</th>
+                <th>Task 5</th>
+                <th>Zeitung</th>
+            </tr>
+        </thead>
+        <tbody id="taskTable"></tbody>
+    </table>
+
+    <button class="reset-btn" onclick="resetProgress()">Reset Progress</button>
+
+    <script>
+        const startDate = new Date('2024-10-06'); 
+        const taskTable = document.getElementById('taskTable');
+
+        // Task sets for odd and even days
+        const oddDayTasks = ['Lesen', 'Hören', 'C Test'];
+        const evenDayTasks = ['Sprechen', 'Schreiben', 'Mathematik'];
+
+        // Function to generate rows
+        function generateRows() {
+            for (let i = 0; i < 30; i++) { // 30 days of tasks
+                const currentDate = new Date(startDate);
+                currentDate.setDate(startDate.getDate() + i);
+                const dayOfMonth = currentDate.getDate();
+                const isOddDay = dayOfMonth % 2 !== 0;
+
+                const taskSet = isOddDay ? oddDayTasks : evenDayTasks;
+
+                const row = `
+                    <tr>
+                        <td>${currentDate.toDateString()}</td>
+                        <td><input type="checkbox" class="task" data-date="${currentDate.toDateString()}" data-task="GermanLecture"></td>
+                        <td><input type="checkbox" class="task" data-date="${currentDate.toDateString()}" data-task="Wortschatz"></td>
+                        <td><input type="checkbox" class="task" data-date="${currentDate.toDateString()}" data-task="${taskSet[0]}">${taskSet[0]}</td>
+                        <td><input type="checkbox" class="task" data-date="${currentDate.toDateString()}" data-task="${taskSet[1]}">${taskSet[1]}</td>
+                        <td><input type="checkbox" class="task" data-date="${currentDate.toDateString()}" data-task="${taskSet[2]}">${taskSet[2]}</td>
+                        <td><input type="checkbox" class="task" data-date="${currentDate.toDateString()}" data-task="Zeitung"></td>
+                    </tr>
+                `;
+                taskTable.innerHTML += row;
+            }
+            loadProgress();
+        }
+
+        // Load progress from localStorage
+        function loadProgress() {
+            document.querySelectorAll('.task').forEach(checkbox => {
+                const taskKey = checkbox.dataset.date + '-' + checkbox.dataset.task;
+                const isChecked = localStorage.getItem(taskKey) === 'true';
+                checkbox.checked = isChecked;
+                updateRowColor(checkbox.closest('tr'));
+            });
+        }
+
+        // Save progress to localStorage
+        function saveProgress() {
+            document.querySelectorAll('.task').forEach(checkbox => {
+                const taskKey = checkbox.dataset.date + '-' + checkbox.dataset.task;
+                localStorage.setItem(taskKey, checkbox.checked);
+            });
+        }
+
+        // Update row color based on task completion
+        function updateRowColor(row) {
+            const unchecked = row.querySelectorAll('input[type="checkbox"]:not(:checked)').length > 0;
+            if (unchecked) {
+                row.classList.add('missed');
+                row.classList.remove('followed');
+                showNotification("Task missed for " + row.querySelector('td').innerText);
+            } else {
+                row.classList.add('followed');
+                row.classList.remove('missed');
+            }
+        }
+
+        // Reset progress
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset all progress?')) {
+                localStorage.clear();
+                document.querySelectorAll('.task').forEach(checkbox => checkbox.checked = false);
+                document.querySelectorAll('tr').forEach(row => {
+                    row.classList.remove('missed');
+                    row.classList.remove('followed');
+                });
+            }
+        }
+
+        // Show a browser notification for missed tasks
+        function showNotification(message) {
+            if (Notification.permission === 'granted') {
+                new Notification(message);
+            } else if (Notification.permission !== 'denied') {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        new Notification(message);
+                    }
+                });
+            }
+        }
+
+        // Event listener to save progress and check missed tasks
+        document.addEventListener('change', (e) => {
+            if (e.target.matches('.task')) {
+                updateRowColor(e.target.closest('tr'));
+                saveProgress();
+            }
+        });
+
+        generateRows();
+    </script>
+
+</body>
+</html>
