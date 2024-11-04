@@ -36,7 +36,7 @@ This is a **daily task management website** designed to help you keep track of y
 
 ## Demo
 You can view the live version of the website at:
-[GitHub Pages Link](https://yourusername.github.io/your-repo-name)
+[GitHub Pages Link](https://theraviranjankr.github.io/Learning-Deutsch/)
 
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
