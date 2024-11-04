@@ -79,11 +79,11 @@
         const startDate = new Date('2024-10-06'); 
         const taskTable = document.getElementById('taskTable');
 
-        // Task sets for odd and even days
+       
         const oddDayTasks = ['Lesen', 'Hören', 'C Test'];
         const evenDayTasks = ['Sprechen', 'Schreiben', 'Mathematik'];
 
-        // Function to generate rows
+       
         function generateRows() {
             for (let i = 0; i < 30; i++) { // 30 days of tasks
                 const currentDate = new Date(startDate);
@@ -127,7 +127,7 @@
             });
         }
 
-        // Update row color based on task completion
+        
         function updateRowColor(row) {
             const unchecked = row.querySelectorAll('input[type="checkbox"]:not(:checked)').length > 0;
             if (unchecked) {
@@ -140,7 +140,7 @@
             }
         }
 
-        // Reset progress
+       
         function resetProgress() {
             if (confirm('Are you sure you want to reset all progress?')) {
                 localStorage.clear();
@@ -152,7 +152,7 @@
             }
         }
 
-        // Show a browser notification for missed tasks
+       
         function showNotification(message) {
             if (Notification.permission === 'granted') {
                 new Notification(message);
@@ -165,7 +165,7 @@
             }
         }
 
-        // Event listener to save progress and check missed tasks
+      
         document.addEventListener('change', (e) => {
             if (e.target.matches('.task')) {
                 updateRowColor(e.target.closest('tr'));
