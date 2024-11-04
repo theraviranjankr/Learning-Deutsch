@@ -85,7 +85,7 @@
 
        
         function generateRows() {
-            for (let i = 0; i < 30; i++) { // 30 days of tasks
+            for (let i = 0; i < 30; i++) { 
                 const currentDate = new Date(startDate);
                 currentDate.setDate(startDate.getDate() + i);
                 const dayOfMonth = currentDate.getDate();
@@ -109,7 +109,7 @@
             loadProgress();
         }
 
-        // Load progress from localStorage
+        
         function loadProgress() {
             document.querySelectorAll('.task').forEach(checkbox => {
                 const taskKey = checkbox.dataset.date + '-' + checkbox.dataset.task;
@@ -119,7 +119,7 @@
             });
         }
 
-        // Save progress to localStorage
+       
         function saveProgress() {
             document.querySelectorAll('.task').forEach(checkbox => {
                 const taskKey = checkbox.dataset.date + '-' + checkbox.dataset.task;
